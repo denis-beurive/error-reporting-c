@@ -80,8 +80,8 @@ void test_just_long_enough_message() {
     char   expected_message[BIG_BUFFER_LENGTH];
     size_t message_len;
     size_t prefix_len;
-    long   id         = 10;
-    long   line;
+    long id = 10;
+    long line;
 
     // Calculate the length `message_len` of an error message that will be too long, by just one byte.
     // Hypothesis: `LAST_ERROR_MESSAGE_BUFFER_CAPACITY` = 200
@@ -118,6 +118,10 @@ void test_just_long_enough_message() {
     // Try to report the error.
     assert(1 == last_error_set(id, __FILE__, line, __func__, "%s", message));
     assert(0 == strcmp(expected_message, last_error_get_message()));
+    assert(0 == strcmp(__FILE__, last_error_get_file()));
+    assert(0 == strcmp(__func__, last_error_get_function()));
+    assert(line == last_error_get_line());
+    assert(id == last_error_get_id());
 }
 
 void test_empty_message() {
@@ -143,8 +147,11 @@ void test_empty_message() {
     // Try to report the error.
     assert(1 == last_error_set(id, __FILE__, line, __func__, "%s", message));
     assert(0 == strcmp(expected_message, last_error_get_message()));
+    assert(0 == strcmp(__FILE__, last_error_get_file()));
+    assert(0 == strcmp(__func__, last_error_get_function()));
+    assert(line == last_error_get_line());
+    assert(id == last_error_get_id());
 }
-
 
 int main() {
     test_nominal_use_case();
